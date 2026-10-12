@@ -35,19 +35,43 @@ let order = [];
 let rotation = 0;
 let numberPos = "bottom-center";
 let busy = false;
+const dependencyPromises = new Map();
+const DEPENDENCIES = {
+  pdfLib: "https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js",
+  pdfJs: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js",
+  jsZip: "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js",
+};
 
-function pdfLib() {
-  if (!window.PDFLib) throw new Error("pdf-lib is still loading. Wait a moment and try again.");
-  return window.PDFLib;
+function loadScript(name, source, globalName) {
+  if (window[globalName]) return Promise.resolve(window[globalName]);
+  if (dependencyPromises.has(name)) return dependencyPromises.get(name);
+  const promise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = source;
+    script.async = true;
+    script.onload = () => window[globalName] ? resolve(window[globalName]) : reject(new Error(`${name} loaded without its global.`));
+    script.onerror = () => reject(new Error(`Could not load ${name}. Check your connection and try again.`));
+    document.head.appendChild(script);
+  });
+  dependencyPromises.set(name, promise);
+  return promise;
 }
 
-function ensurePdfJs() {
-  if (!window.pdfjsLib) throw new Error("PDF.js is still loading. Wait a moment and try again.");
-  if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+async function pdfLib() {
+  return loadScript("pdf-lib", DEPENDENCIES.pdfLib, "PDFLib");
+}
+
+async function ensurePdfJs() {
+  const pdfjs = await loadScript("PDF.js", DEPENDENCIES.pdfJs, "pdfjsLib");
+  if (!pdfjs.GlobalWorkerOptions.workerSrc) {
+    pdfjs.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
   }
-  return window.pdfjsLib;
+  return pdfjs;
+}
+
+function ensureJsZip() {
+  return loadScript("JSZip", DEPENDENCIES.jsZip, "JSZip");
 }
 
 function formatBytes(bytes) {
@@ -331,7 +355,7 @@ function resetFiles() {
 }
 
 async function loadPdfFile(file) {
-  const { PDFDocument } = pdfLib();
+  const { PDFDocument } = await pdfLib();
   const bytes = await file.arrayBuffer();
   const doc = await PDFDocument.load(bytes, { ignoreEncryption: true, updateMetadata: false });
   pdfBytes = bytes;
@@ -405,7 +429,7 @@ async function runMerge() {
   const pdfs = files.filter(isPdf);
   if (pdfs.length < 2) throw new Error("Add at least two PDFs.");
   setStatus("Merging PDFs…");
-  const { PDFDocument } = pdfLib();
+  const { PDFDocument } = await pdfLib();
   const out = await PDFDocument.create();
   for (let i = 0; i < pdfs.length; i += 1) {
     const src = await PDFDocument.load(await pdfs[i].arrayBuffer(), { ignoreEncryption: true });
@@ -418,14 +442,14 @@ async function runMerge() {
 
 async function runSplit() {
   if (!pdfBytes) throw new Error("Drop a PDF first.");
-  const { PDFDocument } = pdfLib();
+  const { PDFDocument } = await pdfLib();
   const src = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
   const mode = document.getElementById("split-mode").value;
   const base = stem(files[0]?.name);
   if (mode === "all") {
-    if (!window.JSZip) throw new Error("JSZip failed to load.");
+    const JSZip = await ensureJsZip();
     setStatus("Splitting every page…");
-    const zip = new window.JSZip();
+    const zip = new JSZip();
     for (let i = 0; i < pageCount; i += 1) {
       const one = await PDFDocument.create();
       const [page] = await one.copyPages(src, [i]);
@@ -451,7 +475,7 @@ async function runSplit() {
 async function runReorder() {
   if (!pdfBytes) throw new Error("Drop a PDF first.");
   setStatus("Saving new page order…");
-  const { PDFDocument } = pdfLib();
+  const { PDFDocument } = await pdfLib();
   const src = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
   const out = await PDFDocument.create();
   const copied = await out.copyPages(src, order);
@@ -462,7 +486,7 @@ async function runReorder() {
 async function runRotate() {
   if (!pdfBytes) throw new Error("Drop a PDF first.");
   setStatus("Rotating pages…");
-  const { PDFDocument, degrees } = pdfLib();
+  const { PDFDocument, degrees } = await pdfLib();
   const doc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
   doc.getPages().forEach((page) => {
     const current = page.getRotation().angle || 0;
@@ -474,7 +498,7 @@ async function runRotate() {
 async function runCompress() {
   if (!pdfBytes) throw new Error("Drop a PDF first.");
   setStatus("Compressing…");
-  const { PDFDocument } = pdfLib();
+  const { PDFDocument } = await pdfLib();
   const doc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true, updateMetadata: false });
   const out = await doc.save({ useObjectStreams: true });
   const saved = pdfBytes.byteLength - out.length;
@@ -493,7 +517,7 @@ async function runWatermark() {
   const text = document.getElementById("wm-text").value.trim();
   if (!text) throw new Error("Enter watermark text.");
   setStatus("Stamping pages…");
-  const { PDFDocument, StandardFonts, rgb, degrees } = pdfLib();
+  const { PDFDocument, StandardFonts, rgb, degrees } = await pdfLib();
   const doc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
   const font = await doc.embedFont(StandardFonts.HelveticaBold);
   const opacity = Number(document.getElementById("wm-opacity").value) / 100;
@@ -521,7 +545,7 @@ async function runWatermark() {
 async function runNumbers() {
   if (!pdfBytes) throw new Error("Drop a PDF first.");
   setStatus("Numbering pages…");
-  const { PDFDocument, StandardFonts, rgb } = pdfLib();
+  const { PDFDocument, StandardFonts, rgb } = await pdfLib();
   const doc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
   const font = await doc.embedFont(StandardFonts.Helvetica);
   const pages = doc.getPages();
@@ -547,15 +571,15 @@ async function runNumbers() {
 
 async function runImages() {
   if (!pdfBytes) throw new Error("Drop a PDF first.");
-  const pdfjs = ensurePdfJs();
-  if (!window.JSZip) throw new Error("JSZip failed to load.");
+  const pdfjs = await ensurePdfJs();
+  const JSZip = await ensureJsZip();
   setStatus("Rendering pages…");
   const pdf = await pdfjs.getDocument({ data: pdfBytes.slice(0) }).promise;
   const scale = Number(document.getElementById("img-scale").value) || 1.5;
   const format = document.getElementById("img-format").value;
   const mime = format === "jpeg" ? "image/jpeg" : "image/png";
   const ext = format === "jpeg" ? "jpg" : "png";
-  const zip = new window.JSZip();
+  const zip = new JSZip();
   const base = stem(files[0]?.name);
   for (let i = 1; i <= pdf.numPages; i += 1) {
     const page = await pdf.getPage(i);
@@ -588,7 +612,7 @@ async function runPhotos() {
   const images = files.filter(isImage);
   if (!images.length) throw new Error("Add at least one image.");
   setStatus("Building PDF…");
-  const { PDFDocument, PageSizes } = pdfLib();
+  const { PDFDocument, PageSizes } = await pdfLib();
   const doc = await PDFDocument.create();
   const sizeOpt = document.getElementById("photo-size").value;
   for (let i = 0; i < images.length; i += 1) {

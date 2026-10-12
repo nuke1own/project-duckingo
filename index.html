@@ -139,7 +139,7 @@
               </svg>
             </button>
           </div>
-          <p class="composer__note" id="composer-note">Replies come from Gemini through Duckingo’s worker. The API key stays off this page. Press Enter to send; Shift+Enter for a new line.</p>
+          <p class="composer__note" id="composer-note">Replies come from Gemini through Duckingo’s worker. The API key stays off this page. Enter to send · Shift+Enter for a new line · Ctrl/Cmd+K to focus.</p>
         </form>
       </section>
     </div>
@@ -147,6 +147,8 @@
     <p class="sr-only" id="chat-status" role="status" aria-live="polite"></p>
     <button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-controls="sidebar" aria-expanded="true" aria-label="Hide tools">‹</button>
   </div>
-  <script src="./chat.js"></script>
+  <script src="./register-sw.js" defer></script>
+  <script src="./global-shortcuts.js" defer></script>
+  <script src="./chat.js" defer></script>
 </body>
 </html>

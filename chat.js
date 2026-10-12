@@ -234,7 +234,15 @@ menuBtn?.addEventListener("click", () => {
 
 document.querySelectorAll(".tool-item, .nav__link").forEach((link) => link.addEventListener("click", closeMobileMenus));
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeMobileMenus();
+  if (event.key === "Escape") {
+    if (busy) {
+      activeController?.abort();
+      setStatus("Stopping the request…", true);
+    } else {
+      closeMobileMenus();
+    }
+    return;
+  }
 });
 
 form.addEventListener("submit", (event) => { event.preventDefault(); send(input.value); });
