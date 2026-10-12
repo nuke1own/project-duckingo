@@ -7,6 +7,7 @@ export const hubHref = pagesRelative
   : BASE_URL.includes("/tools/qr-code")
     ? BASE_URL.replace(/tools\/qr-code\/?$/, "")
     : BASE_URL;
+export const chatHref = pagesRelative ? "../../chat.html" : `${hubHref}chat.html`;
 export const imageStudioHref = pagesRelative
   ? "../image-studio/"
   : `${hubHref.endsWith("/") ? hubHref : `${hubHref}/`}tools/image-studio/`;

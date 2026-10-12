@@ -21,7 +21,7 @@
       }
       return;
     }
-    if (event.altKey && /^[1-4]$/.test(event.key)) {
+    if (event.altKey && /^[1-5]$/.test(event.key)) {
       const link = document.querySelectorAll(".nav__link")[Number(event.key) - 1];
       if (link instanceof HTMLElement) {
         event.preventDefault();

@@ -4,17 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#000000" />
-  <meta name="description" content="Duckingo — an all-in-one workspace for AI chat and everyday tools. QR codes, Image Studio, PDF Studio, and more." />
+  <meta name="description" content="Duckingo — an all-in-one workspace for AI chat, QR codes, image editing, and PDF tools." />
   <link rel="canonical" href="https://duckingo.org/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Duckingo" />
-  <meta property="og:title" content="Duckingo — AI chat and everyday tools" />
-  <meta property="og:description" content="An all-in-one workspace for AI chat, QR codes, image editing, and PDF tools." />
+  <meta property="og:title" content="Duckingo — all your tools, one desk" />
+  <meta property="og:description" content="AI chat, QR codes, image editing, and PDF tools in one calm workspace." />
   <meta property="og:url" content="https://duckingo.org/" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Duckingo — AI chat and everyday tools" />
-  <meta name="twitter:description" content="An all-in-one workspace for AI chat and everyday tools." />
-  <title>Duckingo — AI chat and everyday tools</title>
+  <title>Duckingo — All-in-one tool workspace</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,15 +20,17 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <a class="skip-link" href="#chat-thread">Skip to chat</a>
-  <div class="app" id="app">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="app home-app" id="app">
     <nav class="nav" role="navigation" aria-label="Main navigation">
       <div class="container">
         <div class="nav__inner">
           <a href="./" class="nav__logo">Duckingo</a>
           <button type="button" class="nav__menu-btn" id="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">☰</button>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false"><span aria-hidden="true">◐</span><span class="theme-toggle__label">Theme</span></button>
           <ul class="nav__links" id="nav-links" role="list">
-            <li><a href="./" class="nav__link is-active">Chat</a></li>
+            <li><a href="./" class="nav__link is-active">Home</a></li>
+            <li><a href="./chat.html" class="nav__link">Chat</a></li>
             <li><a href="./tools/qr-code/" class="nav__link">QR Code</a></li>
             <li><a href="./tools/image-studio/" class="nav__link">Image Studio</a></li>
             <li><a href="./tools/pdf-studio/" class="nav__link">PDF Studio</a></li>
@@ -39,116 +39,69 @@
       </div>
     </nav>
 
-    <div class="workspace">
-      <aside class="sidebar" id="sidebar" aria-label="Tools">
-        <button type="button" class="sidebar__close" id="sidebar-close" aria-label="Close tools">×</button>
-        <button type="button" class="btn btn--primary sidebar__new" id="new-chat-btn" title="New chat">＋ <span class="sidebar__new-label">New chat</span></button>
-        <p class="sidebar__label">Assistant</p>
-        <ul class="tool-list">
-          <li>
-            <a class="tool-item is-active" href="./" title="Duckingo Chat">
-              <span class="tool-item__icon" aria-hidden="true">✦</span>
-              <span class="tool-item__meta">
-                <span class="tool-item__name">Duckingo Chat</span>
-                <span class="tool-item__hint">Ask anything</span>
-              </span>
-            </a>
-          </li>
-        </ul>
-        <p class="sidebar__label" style="margin-top:22px;">Tools</p>
-        <ul class="tool-list">
-          <li>
-            <a class="tool-item" href="./tools/qr-code/" title="QR Code Generator">
-              <span class="tool-item__icon" aria-hidden="true">▣</span>
-              <span class="tool-item__meta">
-                <span class="tool-item__name">QR Code Generator</span>
-                <span class="tool-item__hint">Create and export codes</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class="tool-item" href="./tools/image-studio/" title="Image Studio">
-              <span class="tool-item__icon" aria-hidden="true">▦</span>
-              <span class="tool-item__meta">
-                <span class="tool-item__name">Image Studio</span>
-                <span class="tool-item__hint">Crop, cut out, convert</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class="tool-item" href="./tools/pdf-studio/" title="PDF Studio">
-              <span class="tool-item__icon" aria-hidden="true">▤</span>
-              <span class="tool-item__meta">
-                <span class="tool-item__name">PDF Studio</span>
-                <span class="tool-item__hint">Merge, split, convert</span>
-              </span>
-            </a>
-          </li>
-        </ul>
-        <p class="sidebar__foot">All-in-one tools · Light workspace</p>
-      </aside>
-
-      <section class="chat" aria-label="Duckingo assistant">
-        <header class="chat__header">
-          <div class="chat__identity">
-            <span class="mark" aria-hidden="true">D</span>
-            <div>
-              <p class="chat__title">Duckingo Assistant</p>
-              <p class="chat__sub">Private tools · Gemini replies</p>
-            </div>
-          </div>
-          <span class="badge badge--muted" role="status" aria-label="Chat service status">Live</span>
-        </header>
-
-        <div class="chat__thread" id="chat-thread" aria-live="polite" aria-atomic="false">
-          <div class="chat__inner" id="chat-inner">
-            <div class="empty" id="empty-state">
-              <p class="empty__eyebrow">All your tools, one desk</p>
-              <h1 class="empty__title">How can I help you today?</h1>
-              <p class="empty__lead">Ask Duckingo to draft, plan, or point you to the right tool.</p>
-              <div class="suggest-grid">
-                <button type="button" class="suggest" data-prompt="Create a QR code for my portfolio site.">
-                  <span class="suggest__label">Make a QR code</span>
-                  <span class="suggest__hint">Open the generator with a clear brief</span>
-                </button>
-                <button type="button" class="suggest" data-prompt="Write a short, professional product intro for Duckingo.">
-                  <span class="suggest__label">Write a product intro</span>
-                  <span class="suggest__hint">Clean copy, ready to paste</span>
-                </button>
-                <button type="button" class="suggest" data-prompt="Plan a simple workflow to crop a photo, remove the background, and export PNG or JPEG.">
-                  <span class="suggest__label">Plan a tool workflow</span>
-                  <span class="suggest__hint">Image Studio + PDF Studio</span>
-                </button>
-                <button type="button" class="suggest" data-prompt="How do I merge two PDFs and add page numbers in Duckingo?">
-                  <span class="suggest__label">Work with a PDF</span>
-                  <span class="suggest__hint">Merge, split, or convert in PDF Studio</span>
-                </button>
-              </div>
-            </div>
+    <main id="main-content" class="home-main">
+      <section class="home-hero container" aria-labelledby="home-title">
+        <div class="home-hero__copy">
+          <p class="empty__eyebrow">One calm workspace</p>
+          <h1 class="home-hero__title" id="home-title">All your tools,<br /><span>one desk.</span></h1>
+          <p class="home-hero__lead">Chat, create, edit, and convert without jumping between apps. Duckingo keeps useful everyday tools together and puts your files first.</p>
+          <div class="home-hero__actions">
+            <a class="btn btn--primary" href="./chat.html">Start with chat <span aria-hidden="true">→</span></a>
+            <a class="btn" href="#tools">Explore tools</a>
           </div>
         </div>
-
-        <form class="composer" id="composer" autocomplete="off">
-          <label class="sr-only" for="composer-input">Message Duckingo</label>
-          <div class="composer__box">
-            <textarea id="composer-input" class="composer__input" rows="1" maxlength="4000" placeholder="Message Duckingo…" aria-describedby="composer-note"></textarea>
-            <button type="button" class="composer__stop" id="stop-btn" hidden disabled>Stop</button>
-            <button type="submit" class="composer__send" id="send-btn" aria-label="Send message" disabled>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/>
-              </svg>
-            </button>
-          </div>
-          <p class="composer__note" id="composer-note">Replies come from Gemini through Duckingo’s worker. The API key stays off this page. Enter to send · Shift+Enter for a new line · Ctrl/Cmd+K to focus.</p>
-        </form>
+        <div class="home-hero__panel" aria-label="Duckingo workspace summary">
+          <div class="home-orbit" aria-hidden="true"><span>AI</span><span>QR</span><span>IMG</span><span>PDF</span><b>D</b></div>
+          <p class="home-hero__panel-title">Made for focused work</p>
+          <p class="home-hero__panel-copy">Browser-first tools with local processing where possible and a simple, light workspace.</p>
+        </div>
       </section>
-    </div>
-    <div class="mobile-backdrop" id="mobile-backdrop" aria-hidden="true"></div>
-    <p class="sr-only" id="chat-status" role="status" aria-live="polite"></p>
-    <button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-controls="sidebar" aria-expanded="true" aria-label="Hide tools">‹</button>
+
+      <section class="home-tools container" id="tools" aria-labelledby="tools-title">
+        <div class="section-heading">
+          <div><p class="empty__eyebrow">Choose a direction</p><h2 id="tools-title">What do you want to do?</h2></div>
+          <p class="section-heading__hint">Four tools. One consistent workspace.</p>
+        </div>
+        <div class="tool-card-grid">
+          <a class="tool-card tool-card--chat" href="./chat.html">
+            <div class="tool-card__top"><span class="tool-card__icon">✦</span><span class="tool-card__arrow" aria-hidden="true">↗</span></div>
+            <p class="tool-card__eyebrow">Assistant</p><h3>Duckingo Chat</h3><p>Ask, draft, plan, and get pointed to the right tool.</p><span class="tool-card__link">Open assistant</span>
+          </a>
+          <a class="tool-card" href="./tools/qr-code/">
+            <div class="tool-card__top"><span class="tool-card__icon">▣</span><span class="tool-card__arrow" aria-hidden="true">↗</span></div>
+            <p class="tool-card__eyebrow">Create</p><h3>QR Code Generator</h3><p>Design and export styled QR codes for links, text, events, and more.</p><span class="tool-card__link">Create a code</span>
+          </a>
+          <a class="tool-card" href="./tools/image-studio/">
+            <div class="tool-card__top"><span class="tool-card__icon">▦</span><span class="tool-card__arrow" aria-hidden="true">↗</span></div>
+            <p class="tool-card__eyebrow">Transform</p><h3>Image Studio</h3><p>Crop, resize, remove backgrounds, adjust, and export in your browser.</p><span class="tool-card__link">Edit an image</span>
+          </a>
+          <a class="tool-card" href="./tools/pdf-studio/">
+            <div class="tool-card__top"><span class="tool-card__icon">▤</span><span class="tool-card__arrow" aria-hidden="true">↗</span></div>
+            <p class="tool-card__eyebrow">Organize</p><h3>PDF Studio</h3><p>Merge, split, reorder, watermark, number, and convert PDFs privately.</p><span class="tool-card__link">Open PDF tools</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="home-note container" aria-label="Duckingo principles">
+        <div><strong>Private by default.</strong><span>Your files stay in your browser for the local-first tools.</span></div>
+        <div><strong>Lightweight.</strong><span>Only load heavier capabilities when you choose them.</span></div>
+        <div><strong>Keyboard-friendly.</strong><span>Use Ctrl/Cmd+K to focus chat and Alt+1–5 to navigate.</span></div>
+      </section>
+    </main>
   </div>
+  <script src="./theme.js" defer></script>
   <script src="./register-sw.js" defer></script>
   <script src="./global-shortcuts.js" defer></script>
-  <script src="./chat.js" defer></script>
+  <script>
+    document.getElementById("menu-btn")?.addEventListener("click", (event) => {
+      const button = event.currentTarget;
+      const app = document.getElementById("app");
+      const open = app.classList.toggle("nav-open");
+      button.setAttribute("aria-expanded", String(open));
+      button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    });
+    document.querySelectorAll(".nav__link").forEach((link) => link.addEventListener("click", () => document.getElementById("app")?.classList.remove("nav-open")));
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") document.getElementById("app")?.classList.remove("nav-open"); });
+  </script>
 </body>
 </html>
