@@ -38,10 +38,15 @@ jobs:
           cache-dependency-path: |
             tools/qr-code/pnpm-lock.yaml
             tools/image-studio/pnpm-lock.yaml
+      - name: Validate static site
+        run: |
+          node --check chat.js
+          node scripts/check-site.mjs
       - name: Build QR tool
         working-directory: tools/qr-code
         run: |
           pnpm install --frozen-lockfile
+          pnpm run check
           pnpm run build:pages
       - name: Build Image Studio
         working-directory: tools/image-studio

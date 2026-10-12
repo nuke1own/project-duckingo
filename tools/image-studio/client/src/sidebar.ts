@@ -33,4 +33,13 @@ export function initSidebar(app: HTMLElement) {
     menuBtn.setAttribute("aria-expanded", String(open));
     menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
   });
+  const close = () => {
+    app.classList.remove("nav-open");
+    menuBtn?.setAttribute("aria-expanded", "false");
+    menuBtn?.setAttribute("aria-label", "Open menu");
+  };
+  app.querySelectorAll(".nav__link, .tool-item").forEach((link) => link.addEventListener("click", close));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") close();
+  });
 }

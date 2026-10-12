@@ -613,9 +613,14 @@ export default function Home() {
     onScroll();
     scroller?.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileNavOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
     return () => {
       scroller?.removeEventListener("scroll", onScroll);
       window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
 

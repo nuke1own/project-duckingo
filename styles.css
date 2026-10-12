@@ -224,6 +224,7 @@ button { cursor: pointer; }
   width: 100%;
   margin-bottom: 28px;
 }
+.sidebar__close { display: none; }
 .sidebar__label {
   font-size: .72rem;
   font-weight: 700;
@@ -511,6 +512,20 @@ button { cursor: pointer; }
   color: var(--white);
 }
 .msg__bubble p + p { margin-top: 10px; }
+.msg__bubble p { white-space: pre-wrap; }
+.msg--error .msg__bubble { border-color: var(--gray-500); }
+.msg__actions { display: flex; gap: 8px; margin-top: 8px; }
+.msg__action {
+  border: 0;
+  background: transparent;
+  color: var(--gray-500);
+  font-size: .75rem;
+  padding: 2px 0;
+  text-decoration: underline;
+}
+.msg__action:hover { color: var(--black); }
+.msg__retry { margin-top: 12px; }
+.mobile-backdrop { display: none; }
 
 .typing {
   display: inline-flex;
@@ -588,6 +603,17 @@ button { cursor: pointer; }
   border-color: var(--gray-200);
   cursor: not-allowed;
 }
+.composer__stop {
+  height: 44px;
+  padding: 0 12px;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--gray-700);
+  font-size: .8rem;
+  font-weight: 700;
+}
+.composer__stop:hover { border-color: var(--black); color: var(--black); }
 .composer__note {
   width: min(100%, 760px);
   margin: 8px auto 0;
@@ -649,7 +675,28 @@ button { cursor: pointer; }
     border-right: 2px solid var(--black);
     box-shadow: var(--shadow-lg);
   }
+  .sidebar__close {
+    display: block;
+    align-self: flex-end;
+    width: 36px;
+    height: 36px;
+    margin: -8px -4px 8px 0;
+    border: 2px solid var(--black);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    font-size: 1.35rem;
+    line-height: 1;
+  }
   .app.nav-open .sidebar { display: flex; }
+  .app.sidebar-open .sidebar { display: flex; }
+  .app.nav-open .mobile-backdrop,
+  .app.sidebar-open .mobile-backdrop {
+    display: block;
+    position: fixed;
+    inset: var(--nav-h) 0 0;
+    z-index: 70;
+    background: rgba(0,0,0,.28);
+  }
   .nav__menu-btn { display: inline-flex; }
   .nav__links { display: none; }
   .app.nav-open .nav__links {
@@ -667,6 +714,7 @@ button { cursor: pointer; }
   .suggest-grid { grid-template-columns: 1fr; }
   .chat__header, .chat__thread, .composer { padding-left: 16px; padding-right: 16px; }
   .nav__logo { font-size: 1.15rem; }
+  .composer__note { line-height: 1.4; }
 }
 
 @media (prefers-reduced-motion: reduce) {
