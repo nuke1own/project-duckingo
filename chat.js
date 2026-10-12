@@ -54,6 +54,7 @@ function setStatus(text, announce = false) {
 
 function setSendEnabled() {
   sendBtn.disabled = busy || !input.value.trim() || input.value.trim().length > MAX_MESSAGE_LENGTH;
+  thread.setAttribute("aria-busy", String(busy));
   if (stopBtn) {
     stopBtn.hidden = !busy;
     stopBtn.disabled = !busy;
