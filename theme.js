@@ -32,6 +32,7 @@
     inner.insertBefore(button, inner.querySelector(".nav__links"));
   };
 
+  let observer = null;
   const bindControls = () => {
     ensureControl();
     apply(current(), false);
@@ -39,9 +40,10 @@
       button.dataset.themeBound = "true";
       button.addEventListener("click", () => apply(current() === "dark" ? "light" : "dark"));
     });
+    if (document.querySelector(".theme-toggle")) observer?.disconnect();
   };
   apply(preferred(), false);
   bindControls();
-  const observer = new MutationObserver(bindControls);
+  observer = new MutationObserver(bindControls);
   observer.observe(document.body, { childList: true, subtree: true });
 })();
