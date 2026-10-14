@@ -1,11 +1,9 @@
 (() => {
-  const KEY = "duckingo.theme";
+  const KEY = "duckingo.theme.v2";
   const root = document.documentElement;
-  const media = window.matchMedia?.("(prefers-color-scheme: dark)");
-
   const current = () => root.dataset.theme === "dark" ? "dark" : "light";
   const preferred = () => {
-    try { return localStorage.getItem(KEY) || (media?.matches ? "dark" : "light"); } catch { return media?.matches ? "dark" : "light"; }
+    try { return localStorage.getItem(KEY) || "light"; } catch { return "light"; }
   };
   const apply = (theme, persist = true) => {
     root.dataset.theme = theme;
@@ -46,7 +44,4 @@
   bindControls();
   const observer = new MutationObserver(bindControls);
   observer.observe(document.body, { childList: true, subtree: true });
-  media?.addEventListener?.("change", (event) => {
-    try { if (!localStorage.getItem(KEY)) apply(event.matches ? "dark" : "light", false); } catch { /* ignore */ }
-  });
 })();

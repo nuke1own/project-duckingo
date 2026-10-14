@@ -1,8 +1,7 @@
-const CACHE_NAME = "duckingo-shell-v1";
+const CACHE_NAME = "duckingo-shell-v2";
 const APP_SHELL = [
   "/",
   "/index.html",
-  "/chat.html",
   "/styles.css",
   "/chat.js",
   "/global-shortcuts.js",

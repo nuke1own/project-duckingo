@@ -1,4 +1,4 @@
-import { chatHref, hubHref, imageStudioHref, pdfStudioHref } from "@/lib/base";
+import { hubHref, imageStudioHref, pdfStudioHref } from "@/lib/base";
 import * as QRCode from "qrcode";
 import {
   AtSign,
@@ -818,11 +818,6 @@ export default function Home() {
             <ul className="nav__links" role="list">
               <li>
                 <a href={hubHref} className="nav__link" onClick={() => setMobileNavOpen(false)}>
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href={chatHref} className="nav__link" onClick={() => setMobileNavOpen(false)}>
                   Chat
                 </a>
               </li>
@@ -854,7 +849,7 @@ export default function Home() {
           <p className="sidebar__label">Assistant</p>
           <ul className="tool-list">
             <li>
-              <a className="tool-item" href={chatHref} title="Duckingo Chat">
+              <a className="tool-item" href={hubHref} title="Duckingo Chat">
                 <span className="tool-item__icon" aria-hidden="true">
                   ✦
                 </span>

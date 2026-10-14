@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const deployedHtml = [
   "index.html",
-  "chat.html",
   "404.html",
   "tools/qr-code/index.html",
   "tools/image-studio/index.html",
